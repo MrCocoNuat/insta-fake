@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.parse.ParseUser
 import org.apache.commons.io.FileUtils
@@ -16,12 +18,15 @@ import java.nio.charset.Charset
 class MainActivity : AppCompatActivity() {
 
     private lateinit var iLoginActivity : Intent
+    private lateinit var actionBar : ActionBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         iLoginActivity = Intent(this, LoginActivity::class.java)
+        actionBar = supportActionBar!!
+        actionBar.title = "Your Pictures"
 
         // check for presence of logged-in user in file
         val credentials = loadCredentials()
@@ -41,6 +46,22 @@ class MainActivity : AppCompatActivity() {
                 doLogin()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu):Boolean{
+        menuInflater.inflate(R.menu.main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.menuLogout -> {
+                Log.i(TAG,"Logging out")
+                deleteUserFile()
+                doLogin()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun doLogin(){

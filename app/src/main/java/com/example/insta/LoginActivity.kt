@@ -7,15 +7,22 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import com.parse.ParseUser
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.charset.Charset
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var actionBar : ActionBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        actionBar = supportActionBar!!
+        actionBar.title = "Sign In or Sign Up"
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
@@ -48,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
             newUser.setPassword(password)
 
             //try a sign up
-            newUser.signUpInBackground(){ e ->
+            newUser.signUpInBackground { e ->
                 if (e == null){
                     // good! save credentials to a cache, report an OK and finish
                     saveCredentials(username,password)
