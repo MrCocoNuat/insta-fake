@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Insta</string>
+    <string name="header_sign_in">Sign In</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="button_sign_in">Sign in</string>
+    <string name="button_sign_up">New User</string>
+</resources>
