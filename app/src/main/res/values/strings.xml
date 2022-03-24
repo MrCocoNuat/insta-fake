@@ -6,4 +6,7 @@
     <string name="button_sign_in">Sign in</string>
     <string name="button_sign_up">New User</string>
     <string name="menu_log_out">Log Out</string>
+    <string name="button_take_picture">Take Picture</string>
+    <string name="button_submit_post">Submit Post</string>
+    <string name="hint_caption">Include a caption!</string>
 </resources>

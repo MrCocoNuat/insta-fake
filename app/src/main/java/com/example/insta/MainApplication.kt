@@ -18,6 +18,9 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        ParseObject.registerSubclass(Post::class.java)
+
         Parse.initialize(
             Parse.Configuration.Builder(this)
                 .applicationId("eSAsvs3gSrZIplOXJyxhIfZYtUWa0frvTrCLAELz")
