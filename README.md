@@ -29,6 +29,9 @@ Here's a walkthrough of implemented user stories:
 
 ![](github_assets/login.gif) ![](github_assets/submit.gif)
 
+Login persistence:
+![](github_assets/persist.gif)
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
