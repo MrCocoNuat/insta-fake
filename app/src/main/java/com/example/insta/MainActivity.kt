@@ -1,26 +1,15 @@
 package com.example.insta
 
-import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentTransaction
-import com.parse.ParseFile
-import com.parse.ParseQuery
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.parse.ParseUser
 import org.apache.commons.io.FileUtils
 import java.io.File
@@ -32,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var iLoginActivity : Intent
     private lateinit var actionBar : ActionBar
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         iLoginActivity = Intent(this, LoginActivity::class.java)
         actionBar = supportActionBar!!
-        actionBar.title = "Your Pictures"
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+
 
         // check for presence of logged-in user in file
         val credentials = loadCredentials()
@@ -82,8 +74,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val getLoginActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if (it.resultCode == Activity.RESULT_OK){
-            //login was successful,
+        if (it.resultCode == RESULT_OK){
+            // login was successful,
             // onto MainActivity proper
             mainActivityForReal(ParseUser.getCurrentUser())
         }
@@ -96,28 +88,50 @@ class MainActivity : AppCompatActivity() {
     fun mainActivityForReal(user : ParseUser){
         Log.i(TAG, "Now logged in as ${user.username}")
 
-        val query: ParseQuery<Post> = ParseQuery.getQuery(Post::class.java)
-        query.include(Post.KEY_UPLOADEDBY)
-
-        // no condition = find all
-        query.findInBackground() { posts, e ->
-            if (e == null) {
-                for (post in posts){
-                    Log.i(TAG,"Post: ${post.getCaption()} by ${post.getUploadedBy()?.username}")
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_feed -> {
+                    openFeed()
+                    true
                 }
-                val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-                ft.replace(R.id.placeholder, FeedFragment(posts))
-                ft.commit()
-            } else {
-                Log.e(TAG, "Failed to load posts from server")
+                R.id.action_create -> {
+                    openCapture()
+                    true
+                }
+                R.id.action_profile -> {
+                    openProfile()
+                    true
+                }
+                else -> true
             }
         }
 
-//        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-//        ft.replace(R.id.placeholder, CaptureFragment())
-//        ft.commit()
+        openFeed()
     }
 
+    fun openFeed(){
+        actionBar.title = "Feed"
+
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.placeholder, FeedFragment(null))
+        ft.commit()
+    }
+
+    fun openCapture(){
+        actionBar.title = "Create a Post"
+
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.placeholder, CaptureFragment())
+        ft.commit()
+    }
+
+    fun openProfile(){
+        actionBar.title = "${ParseUser.getCurrentUser().username}'s Posts"
+
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.placeholder, FeedFragment(ParseUser.getCurrentUser()))
+        ft.commit()
+    }
 
 
 

@@ -22,12 +22,6 @@ import com.parse.ParseUser
 import java.io.File
 
 class CaptureFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +48,11 @@ class CaptureFragment : Fragment() {
     fun submitPost(caption : String, image : File?){
         val post = Post()
         post.setCaption(caption)
-        if (image != null) {
-            post.setImage(ParseFile(photoFile))
+        if (image == null) {
+            Toast.makeText(context, "Photo needed!", Toast.LENGTH_SHORT).show()
+            return
         }
+        post.setImage(ParseFile(photoFile))
         post.setUploadedBy(ParseUser.getCurrentUser())
 
         post.saveInBackground(){ e ->
